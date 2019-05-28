@@ -1,0 +1,54 @@
+spring:
+  profiles:
+    active: dev
+  http:
+    encoding:
+      force: true
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:/ehcache.xml
+  jackson:
+    mapper:
+      DEFAULT_VIEW_INCLUSION: true
+  meteoroid:
+    oauth2:
+      clients:
+        - client: locale-client
+          secret: locale-secret
+          grantTypes: password,refresh_token
+          scopes: read,write,all
+      ignores:
+        - /api/**
+
+---
+spring:
+  profiles: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: sk123456
+    data: classpath:data.sql
+    initialization-mode: never
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
+
+---
+spring:
+  profiles: prod
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/blog?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
+    username: sa
+    password: QAZwsx123@
+    data: classpath:data.sql
+    initialization-mode: never
+server:
+  port: 8003
