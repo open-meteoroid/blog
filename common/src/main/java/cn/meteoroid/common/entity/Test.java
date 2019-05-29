@@ -4,6 +4,8 @@ import cn.meteoroid.common.support.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -23,6 +25,8 @@ import java.time.LocalDateTime;
 @Entity(name = "test")
 @Where(clause = "deleted = 0")
 @SQLDelete(sql = "update test set deleted = 1 where id = ?")
+@DynamicInsert
+@DynamicUpdate
 @EntityListeners(AuditingEntityListener.class)
 public class Test extends BaseEntity {
 

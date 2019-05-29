@@ -20,6 +20,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 /**
@@ -78,7 +79,7 @@ public class ExceptionAdviceHandler {
     }
 
     /**
-     * 400 - 参数校验 数据不存在
+     * 400 - 参数校验 delete 数据不存在
      *
      * @param e EmptyResultDataAccessException
      * @return Result
@@ -86,6 +87,20 @@ public class ExceptionAdviceHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(EmptyResultDataAccessException.class)
     public Result<Object> emptyResultDataAccess(EmptyResultDataAccessException e) {
+        Result<Object> result = new Result<>(HttpStatus.BAD_REQUEST.value(), "不存在的请求数据");
+        log.error(" {} - {} - {} - {}", request.getMethod(), request.getRequestURL(), result.getCode(), e.getMessage());
+        return result;
+    }
+
+    /**
+     * 400 - Optional 数据不存在
+     *
+     * @param e NoSuchElementException
+     * @return Result
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NoSuchElementException.class)
+    public Result<Object> noSuchElement(NoSuchElementException e) {
         Result<Object> result = new Result<>(HttpStatus.BAD_REQUEST.value(), "不存在的请求数据");
         log.error(" {} - {} - {} - {}", request.getMethod(), request.getRequestURL(), result.getCode(), e.getMessage());
         return result;
