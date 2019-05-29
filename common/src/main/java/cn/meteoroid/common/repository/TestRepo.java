@@ -1,6 +1,6 @@
-package cn.meteoroid.manager.repository;
+package cn.meteoroid.common.repository;
 
-import cn.meteoroid.manager.entity.Test;
+import cn.meteoroid.common.entity.Test;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,11 +1,13 @@
 package cn.meteoroid.manager.controller;
 
-import cn.meteoroid.manager.entity.Test;
+import cn.meteoroid.common.entity.Test;
+import cn.meteoroid.common.support.Messages;
 import cn.meteoroid.manager.service.TestService;
 import cn.meteoroid.common.support.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -24,12 +26,22 @@ public class TestController {
         return new Result<>(service.list());
     }
 
-    @PostMapping
-    public Result<Test> save(@RequestBody Test test){
-        return new Result<>(service.save(test));
+    @GetMapping("/{id:\\d+}")
+    public Result<Test> one(@PathVariable Long id){
+        return new Result<>(service.one(id));
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping
+    public Result<Test> insert(@Valid @RequestBody Test test){
+        return new Result<>(service.insert(test), Messages.Insert);
+    }
+
+    @PutMapping("/{id:\\d+}")
+    public Result<Test> update(@Valid @RequestBody Test test, @PathVariable Long id) {
+        return new Result<>(service.update(test, id), Messages.Update);
+    }
+
+    @DeleteMapping("/{id:\\d+}")
     public Result<Boolean> delete(@PathVariable Long id){
         return new Result<>(service.delete(id));
     }

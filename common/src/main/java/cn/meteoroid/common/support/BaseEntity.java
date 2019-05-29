@@ -1,5 +1,6 @@
 package cn.meteoroid.common.support;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -19,7 +20,6 @@ import static cn.meteoroid.common.support.Constants.GENERIC_GENERATOR;
  * @date 2019-05-28 10:16
  */
 @Data
-@Where(clause = "deleted = 0")
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity implements Serializable {
@@ -27,7 +27,6 @@ public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @GeneratedValue(generator = "timeBasedGenerator")
     @GenericGenerator(name = "timeBasedGenerator", strategy = GENERIC_GENERATOR)
     @Column(length = 20, unique = true, updatable = false, columnDefinition = "bigint comment '主键'")
@@ -40,6 +39,6 @@ public class BaseEntity implements Serializable {
 
     @CreatedDate
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Column(name = "create_time", updatable = false, columnDefinition = "datetime default current_timestamp comment '创建时间'")
-    protected LocalDateTime createTime = LocalDateTime.now();
+    @Column(updatable = false, columnDefinition = "datetime default current_timestamp comment '创建时间'")
+    protected LocalDateTime createTime;
 }

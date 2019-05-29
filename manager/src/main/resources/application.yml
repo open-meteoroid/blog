@@ -38,10 +38,15 @@ spring:
       ddl-auto: update
 server:
   port: 8080
+logging:
+  level:
+    web: debug
 
 ---
 spring:
   profiles: prod
+  devtools:
+    add-properties: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
