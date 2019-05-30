@@ -13,32 +13,37 @@ import org.springframework.util.ObjectUtils;
 
 import javax.persistence.EntityManager;
 import java.beans.PropertyDescriptor;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+/**
+ * @author Kelvin Song
+ * @date 2019-05-30 10:30
+ */
 @SuppressWarnings("unchecked")
 @NoRepositoryBean
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public class BaseJpaRepository<T, ID extends Serializable> extends SimpleJpaRepository<T, ID> {
+public class BaseRepositoryImpl<T, ID> extends SimpleJpaRepository<T, ID> implements BaseRepository<T, ID> {
 
-    private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
+//    private static final String ID_MUST_NOT_BE_NULL = "The given id must not be null!";
 
     private final JpaEntityInformation<T, ?> entityInformation;
     private final EntityManager em;
 
-    public BaseJpaRepository(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
+    public BaseRepositoryImpl(JpaEntityInformation<T, ?> entityInformation, EntityManager entityManager) {
         super(entityInformation, entityManager);
         this.entityInformation = entityInformation;
         this.em = entityManager;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public <S extends T> S update(S entity) {
 
         ID id = (ID) entityInformation.getId(entity);
 
-        Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+        if (ObjectUtils.isEmpty(id)) {
+            throw new EmptyResultDataAccessException(1);
+        }
 
         Optional<T> optional = findById(id);
 
@@ -48,41 +53,28 @@ public class BaseJpaRepository<T, ID extends Serializable> extends SimpleJpaRepo
 
         String[] nullProperties = getNullProperties(entity);
 
-        T target = optional.get();
+        S target = (S) optional.get();
 
         BeanUtils.copyProperties(entity, target, nullProperties);
 
         em.merge(target);
 
-        return entity;
+        return target;
     }
 
-    public <S extends T> S save(S entity) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public <S extends T> List<S> updateAll(Iterable<S> entities) {
 
-        if (entityInformation.isNew(entity)) {
-            em.persist(entity);
-            return entity;
-        } else {
-            ID id = (ID) entityInformation.getId(entity);
+        Assert.notNull(entities, "The given Iterable of entities not be null!");
 
-            Assert.notNull(id, ID_MUST_NOT_BE_NULL);
+        List<S> result = new ArrayList<>();
 
-            Optional<T> optional = findById(id);
-
-            if (!optional.isPresent()) {
-                em.persist(entity);
-                return entity;
-            }
-
-            S target = (S) optional.get();
-
-            String[] nullProperties = getNullProperties(entity);
-
-            BeanUtils.copyProperties(entity, target, nullProperties);
-
-            return em.merge(target);
+        for (S entity : entities) {
+            result.add(update(entity));
         }
 
+        return result;
     }
 
     private static String[] getNullProperties(Object src) {

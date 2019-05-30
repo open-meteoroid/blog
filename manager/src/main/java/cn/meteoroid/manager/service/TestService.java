@@ -3,7 +3,6 @@ package cn.meteoroid.manager.service;
 import cn.meteoroid.common.entity.Test;
 import cn.meteoroid.common.repository.TestRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,11 +34,8 @@ public class TestService {
 
     @Transactional(rollbackFor = Exception.class)
     public Test update(Test test, Long id) {
-//        if (!repo.existsById(id)) {
-//            throw new EmptyResultDataAccessException(1);
-//        }
         test.setId(id);
-        return repo.save(test);
+        return repo.update(test);
     }
 
     @Transactional(rollbackFor = Exception.class)
