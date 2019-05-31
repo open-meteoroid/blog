@@ -58,4 +58,17 @@ public class Exceptions {
             super();
         }
     }
+
+    /**
+     * 重复提交异常
+     */
+    public static class RepeatSubmitException extends RuntimeException {
+        public RepeatSubmitException(String message) {
+            super(message);
+        }
+
+        public RepeatSubmitException() {
+            super();
+        }
+    }
 }

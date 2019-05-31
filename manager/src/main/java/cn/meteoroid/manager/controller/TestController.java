@@ -1,6 +1,7 @@
 package cn.meteoroid.manager.controller;
 
 import cn.meteoroid.common.entity.Test;
+import cn.meteoroid.common.extend.lock.RepeatLock;
 import cn.meteoroid.common.support.Messages;
 import cn.meteoroid.manager.service.TestService;
 import cn.meteoroid.common.support.Result;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Kelvin Song
  * @date 2019-05-27 17:15
  */
+@RepeatLock
 @RestController
 @RequestMapping("/test")
 public class TestController {

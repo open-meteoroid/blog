@@ -93,6 +93,20 @@ public class ExceptionAdviceHandler {
     }
 
     /**
+     * 400 - 校验 重复提交
+     *
+     * @param e RepeatSubmitException
+     * @return Result
+     */
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({Exceptions.RepeatSubmitException.class})
+    public Result<Object> repeatSubmit(Exceptions.RepeatSubmitException e) {
+        Result<Object> result = new Result<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        log.error(" {} - {} - {} - {}", request.getMethod(), request.getRequestURL(), result.getCode(), e.getMessage());
+        return result;
+    }
+
+    /**
      * 405 - 请求方法不支持 GET/POST/PUT/PATCH/DELETE...
      *
      * @param e HttpRequestMethodNotSupportedException
