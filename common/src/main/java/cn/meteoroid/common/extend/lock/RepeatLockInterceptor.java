@@ -16,12 +16,13 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 防止重复提交注解拦截器
  * @author Kelvin Song
  * @date 2019-05-31 16:45
  */
 @Aspect
 @Configuration
-public class LockMethodInterceptor {
+public class RepeatLockInterceptor {
 
     /**
      * 最大缓存 500 个

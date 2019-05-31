@@ -3,6 +3,7 @@ package cn.meteoroid.common.extend.lock;
 import java.lang.annotation.*;
 
 /**
+ * 防止重复提交锁
  * @author Kelvin Song
  * @date 2019-05-31 16:43
  */
